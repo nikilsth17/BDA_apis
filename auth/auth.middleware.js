@@ -26,11 +26,7 @@ export const isUser=async(req,res,next)=>{
        if(!user){
            throw new Error("Unauthorised");
        }
-       // if user role is not seller, terminate
-    //    if (user.role!=="seller"){
-    //        throw new Error("Unauthorised.");
-    //    }
-       //add user to req.userInfo
+    
        req.userInfo= user;
        next();
    } catch (error) {

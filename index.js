@@ -2,6 +2,7 @@ import express from "express";
 import { dbConnect } from "./db_connect.js";
 import userRoutes from "./user/user.routes.js";
 import donorRoutes from "./donor/donor.routes.js";
+import requestRoutes from "./requester/requester.route.js"
 import cors from "cors";
 const app= express();
 
@@ -16,6 +17,7 @@ app.use((req,res,next)=>{
 
 app.use(userRoutes);
 app.use(donorRoutes);
+app.use(requestRoutes);
 dbConnect();
 
 const port= process.env.PORT;
