@@ -1,6 +1,4 @@
 import express from "express";
-import { isUser } from "../auth/auth.middleware.js";
-import { addRequestValidationSchema } from "./requester.validation.js";
 import { Requester } from "./requester.model.js";
 
 
@@ -9,17 +7,26 @@ import { Requester } from "./requester.model.js";
 const router= express.Router();
 
 
-router.post("/requester/add",isUser,async(req,res)=>{
-    const newRequester= req.body;
+router.post("/requester/add",async(req,res)=>{
     try {
-        await addRequestValidationSchema.validateAsync(newRequester);
+        const { fullName,phoneNumber,bloodType,location } = req.body;
+
+        // Basic validation
+        if (!fullName || !phoneNumber || !bloodType || !location) {
+            return res.status(400).json({ error: 'Fill all the data' });
+        }
+
+      
+
+        // Create a new parking slot
+        const newRequest = new Requester({ fullName, phoneNumber,bloodType,location });
+        await newRequest.save();
+
+        res.status(201).json({ message: 'Request is added successfully.' });
     } catch (error) {
-        return res.status(400).send({message:error.message});
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error.' });
     }
-    newRequester.userId= req.userInfo._id;
-    await Requester.create(newRequester);
-    console.log(newRequester)
-    return res.status(201).send({message:"Request is add successfully.."});
 })
 
 router.get("/request/all",async(req,res)=>{
